@@ -48,7 +48,6 @@ pred_occ = occ_model.predict(new_data)
 print("Predicted Price:", pred_price[0])
 print("Predicted Occupants:", round(pred_occ[0]))
 ```
-
 ## Output:
 <img width="1246" height="261" alt="image" src="https://github.com/user-attachments/assets/b38e52b4-429b-411c-852d-52f3dfd19292" />
 
