@@ -16,48 +16,41 @@ To write a program to predict the price of the house and number of occupants in 
 
 ## Program:
 ```
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+from sklearn.linear_model import SGDRegressor
+from sklearn.preprocessing import StandardScaler
 
-data = pd.read_csv("Startup.csv")
+data = pd.read_csv("house.csv")
+data.columns = data.columns.str.strip()
 
-X = data['R&D Spend'].values
-y = data['Profit'].values
+X = data[['Size', 'Bedrooms']]
 
-X = (X - X.mean()) / X.std()
+y_price = data['Price']
+y_occ = data['Occupants']
 
-m = 0
-b = 0
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-learning_rate = 0.01
-epochs = 1000
-n = len(X)
+price_model = SGDRegressor(max_iter=1000, learning_rate='constant', eta0=0.01)
+occ_model = SGDRegressor(max_iter=1000, learning_rate='constant', eta0=0.01)
 
-for i in range(epochs):
-    y_pred = m * X + b
-    dm = (-2/n) * np.sum(X * (y - y_pred))
-    db = (-2/n) * np.sum(y - y_pred)
-    m = m - learning_rate * dm
-    b = b - learning_rate * db
+price_model.fit(X_scaled, y_price)
+occ_model.fit(X_scaled, y_occ)
 
-print("Slope (m):", m)
-print("Intercept (b):", b)
+size = float(input("Enter house size: "))
+bed = int(input("Enter number of bedrooms: "))
 
-y_pred = m * X + b
+new_data = scaler.transform([[size, bed]])
 
-plt.scatter(X, y)
-plt.plot(X, y_pred)
+pred_price = price_model.predict(new_data)
+pred_occ = occ_model.predict(new_data)
 
-plt.xlabel("R&D Spend (Normalized)")
-plt.ylabel("Profit")
-plt.title("Gradient Descent on 50_Startups Dataset")
-
-plt.show()
+print("Predicted Price:", pred_price[0])
+print("Predicted Occupants:", round(pred_occ[0]))
 ```
 
 ## Output:
-<img width="895" height="633" alt="image" src="https://github.com/user-attachments/assets/612583be-d887-4c4a-a971-df7919e85cb2" />
+<img width="1246" height="261" alt="image" src="https://github.com/user-attachments/assets/b38e52b4-429b-411c-852d-52f3dfd19292" />
 
 ## Result:
 Thus the program to implement the multivariate linear regression model for predicting the price of the house and number of occupants in the house with SGD regressor is written and verified using python programming.
